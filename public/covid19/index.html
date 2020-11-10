@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Covid-19</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+      <p class="navbar-brand">Covid19</p>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <botton type="botton" class="nav-link"><a class="nav-link" href="http://localhost:3000/covid19">Home <span class="sr-only">(current)</span></a></botton>
+          </li>
+          <li class="nav-item" style="display: none" id="situacionchile">
+            <botton type="botton" class="nav-link" id="schile"><a class="nav-link" href="#">situacionenchile</a></botton>
+          </li>
+          <li class="nav-item" id="sesion">
+            <botton type="botton" class="nav-link" id="isesion" data-toggle="modal" data-target="#iniciarsesion">iniciar sesion</botton>
+          </li>
+          <li class="nav-item" id="csesion" style="display: none">
+            <botton type="botton" class="nav-link" id="cerrarsesion">cerrar sesion</botton>
+          </li>
+        </ul>
+      </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="row justify-content-center align-items-center p-5">
+      <div class="col-md-12">
+        <h3 class="text-center">Covid19</h3>
+        <h3 style="text-align: center;">Situacion mundial</h3>
+        <div style="text-align: center;">
+          <p id="esconder">Hola, porvafor iniciar sesion para obtener informacion sobbre el covid</p>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="mundial">
+            <div id="js-table-wrapper" class="col-md-12" style="display: none">
+                <div class="graphic collapse">
+                    <canvas class="col-12" id="myChart" width="1200px" height="800px"></canvas>
+                </div>
+                <form id="js-form">
+                    <table id="js-table-posts" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">location</th>
+                                <th scope="col">active</th>
+                                <th scope="col">deaths</th>
+                                <th scope="col">confirmed</th>
+                                <th scope="col">recovered</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modales">
+            </div>
+        </div> 
+    </div>
+</div>
+<div id="modalform">
+    <div class="cartas">
+        <div class="modal fade" id="iniciarsesion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p id="mostrar" style="display: none">Haz iniciado sesion correctamente</p>
+                        <div id="js-form-wrapper" class="col-md-12" style="display: block;">
+                            <form id="formulario">
+                                <div class="form-group">
+                                    <label>Email address</label>
+                                    <input id="email" type="email" class="form-control" aria-describedby="emailHelp">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input id="password" type="password" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Entrar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>    
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>    
+<script src="./assets/scripts.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+</body>
+</html>
