@@ -436,7 +436,9 @@ return{
             }
             }
             else{
-                console.log("porfavor iniciar secion")
+                alert("porfavor iniciar sesion con cuenta registrada")
+                const token = localStorage.getItem('jwt-token')
+                localStorage.removeItem('jwt-token');
             }
         })
     }
