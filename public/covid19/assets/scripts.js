@@ -1,52 +1,16 @@
-//cerrarsesion y ocultar todo y haciendo parecer como el inicio
-$("#cerrarsesion").on("click", function(){
-    const token = localStorage.getItem('jwt-token')
-    localStorage.removeItem('jwt-token');
-    $("#sesion").show()
-    $("#situacionchile").hide()
-    $("#csesion").hide()
-    $(`.mundial`).toggle()
-    $(".esconder").show()
-    $("#js-form-wrapper").show()
-    $(".chile").hide()
-    $("#mostrar").hide()
-}) 
+const covid = (() => {
+    //variables
+    let datalocation = []
+    let dataactive = []
+    let datadeaths = []
+    let dataconfirmed = []
+    let datarecovered = []
+    let chiledatarecovered = []
+    let chiledataconfirmed = []
+    let chiledatadeaths = []
 
-let info = $(`<div class="info"></div>`)
-$("div.col-md-6.d-block").append(info)
-let datalocation = []
-let dataactive = []
-let datadeaths = []
-let dataconfirmed = []
-let datarecovered = []
-let chiledatarecovered = []
-let chiledataconfirmed = []
-let chiledatadeaths = []
-$('form').submit(async (event) => {
-    try{
-    event.preventDefault()
-    const email = $('#email').val()
-    const password = $('#password').val()
-    const token = await postData(email,password)
-    if (datalocation.length == 0){
-        init()
-        }
-    else{
-        $("#sesion").hide()
-        $("#situacionchile").show()
-        $("#csesion").show()
-        $(`.mundial`).show()
-        $(".esconder").hide()
-        $("#js-form-wrapper").hide()
-        $("#mostrar").show()
-    }
-    }
-    catch (err) {
-        console.error(`Error: ${err}`)
-    }
-})
-
-//ocultando y apareciendo tablas
+    //funciones
+    //ocultando y apareciendo tablas
 const toggleFormAndTable = (form,table) => {
     $(`#${form}`).toggle()
     $(`#${table}`).toggle()
@@ -101,7 +65,7 @@ const fillTable = (data,table, jwt) => {
         <td style="padding-right:10px"> ${row.recovered} </td>
         <td><button type="button" style="float:left" class="btn col-6" data-toggle="modal" data-target="#pais${i}">Mas Detalles</button></td>
         </td>`
-        printInfoModal(row, i)
+        printInfoModal(i)
         getpais(jwt, row.location, i, row.active, row.deaths, row.confirmed, row.recovered)
         if (row.active > 10000){
             datalocation.push(`${row.location}`);
@@ -216,9 +180,8 @@ function graficamodal(location, deaths, confirmed, active, recovered, i){
     });
 }
 
-
 //modal de los paises
-function printInfoModal(row, i){
+function printInfoModal(i){
     let result = $(".modales")
     let primero = $('<div class="cartas"></div>')
     let segundo = $(`<div class="modal fade" id="pais${i}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>`);
@@ -277,8 +240,30 @@ const getpais = async (jwt, location, i, active, deaths, confirmed, recovered) =
         datarecoveredmodal.push(`${data.recovered}`)
         graficamodal(datalocationmodal, datadeathsmodal, dataconfirmedmodal, dataactivemodal, datarecoveredmodal, i)
     }
-    else{
-        console.log("falto ", + location)
+    } 
+    catch (err) {
+        console.error(`Error: ${err}`)
+    }
+}
+
+//informaciond confirmed
+const getconfirmed = async (jwt) => {
+    try {
+    const response = await fetch(`http://localhost:3000/api/confirmed`,
+    {
+    method:'GET',
+    headers: {
+    Authorization: `Bearer ${jwt}`
+    }
+    })
+    const {data} = await response.json()
+    if (data) {
+        $.each(data, (i, row) => {
+            chiledataconfirmed.push({
+                x: `${row.date}`,
+                y: `${row.total}`   
+            });
+        })
     }
     } 
     catch (err) {
@@ -286,7 +271,101 @@ const getpais = async (jwt, location, i, active, deaths, confirmed, recovered) =
     }
 }
 
-//ejecutador automatico
+//informaciond deaths
+const getdeaths = async (jwt) => {
+    try {
+    const response = await fetch(`http://localhost:3000/api/deaths`,
+    {
+    method:'GET',
+    headers: {
+    Authorization: `Bearer ${jwt}`
+    }
+    })
+    const {data} = await response.json()
+    if (data) {
+        $.each(data, (i, row) => {
+            chiledatadeaths.push({
+                x: `${row.date}`,
+                y: `${row.total}`   
+            });
+        })
+    }
+    } 
+    catch (err) {
+        console.error(`Error: ${err}`)
+    }
+}
+
+//informaciond recovered
+const getrecovered = async (jwt) => {
+    try {
+    const response = await fetch(`http://localhost:3000/api/recovered`,
+    {
+    method:'GET',
+    headers: {
+    Authorization: `Bearer ${jwt}`
+    }
+    })
+    const {data} = await response.json()
+    if (data) {
+        $.each(data, (i, row) => {
+            console.log(row.date)
+            //filtro dias
+            fecha = new Date(row.date)
+            dia = fecha.getDate()
+            console.log(dia)
+            chiledatarecovered.push({
+                x: `${row.date}`,
+                y: `${row.total}`   
+            });
+        })
+    }
+    } 
+    catch (err) {
+        console.error(`Error: ${err}`)
+    }
+}
+
+//grafica lineal chile
+function graficachile(chiledatarecovered, chiledataconfirmed, chiledatadeaths){
+    var ctx = document.getElementById(`myLineChart`).getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'confirmed',
+                borderColor: "#3e95cd",
+                fill: false,
+                data: chiledataconfirmed
+            },
+            {
+                label: 'recovered',
+                borderColor: "#8e5ea2",
+                fill: false,
+                data: chiledatarecovered
+            },
+            {
+                label: 'deaths',
+                borderColor: "#3cba9f",
+                fill: false,
+                data: chiledatadeaths
+            }
+        ]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'month'
+                    },
+                    position: 'bottom'
+                }]
+            }
+        }
+    });
+}
+
 const init = async () => {
     try {
     const token = localStorage.getItem('jwt-token')
@@ -306,4 +385,107 @@ const init = async () => {
         console.error(`Error: ${err}`)
     }
 } 
-init()
+
+const init2 = async () => {
+    try {
+    const token = localStorage.getItem('jwt-token')
+    if(token) {
+        $("#cargar").show()
+        if(chiledataconfirmed.length == 0){
+            await getconfirmed(token)
+            await getdeaths(token)
+            await getrecovered(token)
+            if(chiledataconfirmed.length > 1){
+                graficachile(chiledatarecovered, chiledataconfirmed, chiledatadeaths)
+                $("#cargar").hide()
+            }
+        }
+    }
+    }
+    catch (err) {
+        console.error(`Error: ${err}`)
+    }
+}
+
+return{
+    inicio: async () => {
+    try {
+        init()
+        init2()
+        //ingresar datos formulario
+        $('form').submit(async (event) => {
+            event.preventDefault()
+            $("#situacionmundo").hide()
+            const email = $('#email').val()
+            const password = $('#password').val()
+            const token = await postData(email,password)
+            if (token){
+            if (datalocation.length == 0){
+                $("#cargar").show()
+                init()
+                init2()
+                }
+            else{
+                $("#sesion").hide()
+                $("#situacionchile").show()
+                $("#csesion").show()
+                $(`.mundial`).show()
+                $(".esconder").hide()
+                $("#js-form-wrapper").hide()
+                $("#mostrar").show()
+            }
+            }
+            else{
+                console.log("porfavor iniciar secion")
+            }
+        })
+    }
+    catch (err) {
+        console.error(`Error: ${err}`)
+    }
+},
+delete: async () => {
+    try {
+    //cerrarsesion y ocultar todo y haciendo parecer como el inicio
+$("#cerrarsesion").on("click", function(){
+    const token = localStorage.getItem('jwt-token')
+    localStorage.removeItem('jwt-token');
+    $("#situacionchile").hide()
+    $("#situacionmundo").hide()
+    $("#csesion").hide()
+    $(`.mundial`).hide()
+    $(".chile").hide()
+    $("#mostrar").hide()
+    $("#cargar").hide()
+    $("#sesion").show()
+    $("#mostrarmundo").show()
+    $(".esconder").show()
+    $("#js-form-wrapper").show()
+}) 
+
+//boton de cambiar de pagina a chile
+$("#schile").on("click", function(){
+    $(".chile").show()
+    $("#situacionmundo").show()
+    $(".mundial").hide()
+    $("#situacionchile").hide()
+})
+
+//boton de cambiar de pagina a mundial
+$("#smundial").on("click", function(){
+    $(".mundial").show()
+    $("#situacionchile").show()
+    $(".chile").hide()
+    $("#situacionmundo").hide()
+})
+}
+catch (err) {
+    console.error(`Error: ${err}`)
+}
+}
+}
+})()
+
+covid.inicio()
+covid.delete()
+//revisar porque se demora en cargar grafico chile

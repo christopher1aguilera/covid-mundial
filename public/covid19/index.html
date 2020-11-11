@@ -24,7 +24,10 @@
             <botton type="botton" class="nav-link"><a class="nav-link" href="http://localhost:3000/covid19">Home <span class="sr-only">(current)</span></a></botton>
           </li>
           <li class="nav-item" style="display: none" id="situacionchile">
-            <botton type="botton" class="nav-link" id="schile"><a class="nav-link" href="#">situacionenchile</a></botton>
+            <botton type="botton" class="nav-link" id="schile">situacionenchile</botton>
+          </li>
+          <li class="nav-item" style="display: none" id="situacionmundo">
+            <botton type="botton" class="nav-link" id="smundial">situacionenmundoe</botton>
           </li>
           <li class="nav-item" id="sesion">
             <botton type="botton" class="nav-link" id="isesion" data-toggle="modal" data-target="#iniciarsesion">iniciar sesion</botton>
@@ -38,40 +41,47 @@
 </header>
 <div class="container">
     <div class="row justify-content-center align-items-center p-5">
-      <div class="col-md-12">
-        <h3 class="text-center">Covid19</h3>
-        <h3 style="text-align: center;">Situacion mundial</h3>
-        <div style="text-align: center;">
-          <p id="esconder">Hola, porvafor iniciar sesion para obtener informacion sobbre el covid</p>
+        <div class="col-md-12">
+            <h3 class="text-center">Covid19</h3>
+            <h3 class="mundial" id="mostrarmundo" style="text-align: center;">Situacion mundial</h3>
+            <h3 class="chile" id="mostrarchile" style="text-align: center; display: none">Situacion Chile</h3>
+            <p id="cargar" style="display: none">no cierre sesion, cargando grafica...</p>
+            <div style="text-align: center;">
+                <p class="esconder">Hola, porvafor iniciar sesion para obtener informacion sobbre el covid</p>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="mundial">
+                <div id="js-table-wrapper" class="col-md-12" style="display: none">
+                    <div class="graphic collapse">
+                        <canvas class="col-12" id="myChart" width="1200px" height="800px"></canvas>
+                    </div>
+                    <form id="js-form">
+                        <table id="js-table-posts" class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">location</th>
+                                    <th scope="col">active</th>
+                                    <th scope="col">deaths</th>
+                                    <th scope="col">confirmed</th>
+                                    <th scope="col">recovered</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modales">
+                </div>
+            </div> 
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="mundial">
-            <div id="js-table-wrapper" class="col-md-12" style="display: none">
-                <div class="graphic collapse">
-                    <canvas class="col-12" id="myChart" width="1200px" height="800px"></canvas>
-                </div>
-                <form id="js-form">
-                    <table id="js-table-posts" class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">location</th>
-                                <th scope="col">active</th>
-                                <th scope="col">deaths</th>
-                                <th scope="col">confirmed</th>
-                                <th scope="col">recovered</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="modales">
-            </div>
-        </div> 
+    <div class="chile" style="display: none">
+        <div class="graphicchile">
+            <canvas id="myLineChart" width="1200px" height="800px"></canvas>
+        </div>
     </div>
-</div>
 <div id="modalform">
     <div class="cartas">
         <div class="modal fade" id="iniciarsesion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
