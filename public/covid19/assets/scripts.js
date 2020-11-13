@@ -392,13 +392,13 @@ const init2 = async () => {
     if(token) {
         $("#cargar").show()
         if(chiledataconfirmed.length == 0){
-            await getconfirmed(token)
-            await getdeaths(token)
-            await getrecovered(token)
-            if(chiledataconfirmed.length > 1){
-                graficachile(chiledatarecovered, chiledataconfirmed, chiledatadeaths)
-                $("#cargar").hide()
-            }
+            Promise.all([getconfirmed(token), getdeaths(token), getrecovered(token)])
+            .then (resp => {
+                if(chiledataconfirmed.length > 1){
+                    graficachile(chiledatarecovered, chiledataconfirmed, chiledatadeaths)
+                    $("#cargar").hide()
+                }
+            })
         }
     }
     }
@@ -420,12 +420,12 @@ return{
             const password = $('#password').val()
             const token = await postData(email,password)
             if (token){
-            if (datalocation.length == 0){
+                if (datalocation.length == 0){
                 $("#cargar").show()
                 init()
                 init2()
                 }
-            else{
+                else{
                 $("#sesion").hide()
                 $("#situacionchile").show()
                 $("#csesion").show()
@@ -433,7 +433,7 @@ return{
                 $(".esconder").hide()
                 $("#js-form-wrapper").hide()
                 $("#mostrar").show()
-            }
+                }
             }
             else{
                 alert("porfavor iniciar sesion con cuenta registrada")
